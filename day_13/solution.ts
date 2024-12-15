@@ -38,7 +38,7 @@ function prepareData(data: string[]): Data[] {
   }
   return res;
 }
-function calc(data: Data[],priceA:number,priceB:number): number {
+function calc(data: Data[], priceA: number, priceB: number): number {
   let res = 0;
   data.forEach((item) => {
     const [a, c] = item.aDelta;
@@ -47,7 +47,7 @@ function calc(data: Data[],priceA:number,priceB:number): number {
     const x = (d * X - b * Y) / (a * d - b * c);
     const y = (c * X - a * Y) / (b * c - a * d);
     if (Number.isInteger(x) && Number.isInteger(y)) {
-      res += x * priceA + y*priceB;
+      res += x * priceA + y * priceB;
     }
   });
   return res;
@@ -56,9 +56,12 @@ function calc(data: Data[],priceA:number,priceB:number): number {
 const main = async () => {
   const rawData = await getRawLines("./day_13/data/input.txt");
   let data = prepareData(rawData);
-  console.log("Part 1: ", calc(data,3,1));
-  data= data.map(e=>({...e,target:[e.target[0]+10000000000000,e.target[1]+10000000000000]}))
-  console.log("Part 2: ", calc(data,3,1));
+  console.log("Part 1: ", calc(data, 3, 1));
+  data = data.map((e) => ({
+    ...e,
+    target: [e.target[0] + 10000000000000, e.target[1] + 10000000000000],
+  }));
+  console.log("Part 2: ", calc(data, 3, 1));
 };
 
 main();

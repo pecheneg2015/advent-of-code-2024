@@ -39,56 +39,56 @@ function firstPartSolution(data: number[]): number {
 
 // arr manipulation
 function secondPartSolution(data: number[]): number {
-  const arr: [number, number,number][] = [];
-  let counter = 0
+  const arr: [number, number, number][] = [];
+  let counter = 0;
   data.forEach((e, i) => {
-    arr.push([i % 2, e,i%2===0?counter:-1]);
-    if(i%2===0)
-      counter++
+    arr.push([i % 2, e, i % 2 === 0 ? counter : -1]);
+    if (i % 2 === 0) {
+      counter++;
+    }
   });
   let right = arr.length - 1;
   while (true) {
-    if(right<0)
+    if (right < 0) {
       break;
-    if(arr[right][0]===0){
-
-
-      const ind = arr.findIndex((e,i)=>e[0]===1 && right>i && e[1]>=arr[right][1]);
-      if(ind!==-1){
-        const moveItem = arr[right]
-        if(arr[ind][1]===moveItem[1]){
-          const t = arr[ind]
+    }
+    if (arr[right][0] === 0) {
+      const ind = arr.findIndex((e, i) =>
+        e[0] === 1 && right > i && e[1] >= arr[right][1]
+      );
+      if (ind !== -1) {
+        const moveItem = arr[right];
+        if (arr[ind][1] === moveItem[1]) {
+          const t = arr[ind];
           arr[ind] = moveItem;
-          arr[right] = t
-        right-=1;
-
-        }else{
-          arr.splice(ind,0,moveItem)
-          arr[ind+1][1]-=arr[ind][1];
-          arr[right+1]=[...arr[ind+1]]
-          arr[right+1][1]= arr[ind][1]
+          arr[right] = t;
+          right -= 1;
+        } else {
+          arr.splice(ind, 0, moveItem);
+          arr[ind + 1][1] -= arr[ind][1];
+          arr[right + 1] = [...arr[ind + 1]];
+          arr[right + 1][1] = arr[ind][1];
         }
-
-      }else{
-        right-=1
+      } else {
+        right -= 1;
       }
-    }else{
-      right--
+    } else {
+      right--;
     }
   }
 
-  let res= 0;
-  let ind = 0
-  do{
-    const el = arr.shift() as [number,number,number];
-    while(el[1]>0){
-      if(el[0]===0){
-        res+=ind*el[2]
+  let res = 0;
+  let ind = 0;
+  do {
+    const el = arr.shift() as [number, number, number];
+    while (el[1] > 0) {
+      if (el[0] === 0) {
+        res += ind * el[2];
       }
-      ind++
-      el[1]--
+      ind++;
+      el[1]--;
     }
-  }while(arr.length)
+  } while (arr.length);
   return res;
 }
 

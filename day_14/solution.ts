@@ -24,8 +24,8 @@ function prepareData(data: string): Data {
   };
 }
 
-function getNewPoint(val: number, delta: number, max: number) {
-  const newVal = val + delta;
+function getNewPoint(val: number, delta: number, max: number, repeat: number) {
+  const newVal = val + (delta * repeat) % max;
   if (newVal >= max) {
     return newVal % max;
   }
@@ -50,72 +50,88 @@ function calcRobotCount(
   }
   return res;
 }
-
-function firstPartSolution(data: Data[]): number {
-  let max: Point = [101, 103];
-  let repeat = 100;
-  let m: Record<string, number> = {};
+function getMap(
+  data: Data[],
+  max: Point,
+  repeat: number,
+): Record<string, number> {
+  const m: Record<string, number> = {};
 
   data.forEach((item) => {
     const { velocity } = item;
     let point = item.start;
-    for (let i = 0; i < repeat; i++) {
-      point = [
-        getNewPoint(point[0], velocity[0], max[0]),
-        getNewPoint(point[1], velocity[1], max[1]),
-      ];
-    }
+    point = [
+      getNewPoint(point[0], velocity[0], max[0], repeat),
+      getNewPoint(point[1], velocity[1], max[1], repeat),
+    ];
+
     let key = `${point[0]}_${point[1]}`;
     if (!m[key]) {
       m[key] = 0;
     }
     m[key]++;
   });
-  let m0 = max[0] - 1;
-  let m1 = max[1] - 1;
-  let first = calcRobotCount(m, [0, Math.floor(m0 / 2) - 1], [
-    0,
-    Math.floor(m1 / 2) - 1,
-  ]);
-  let second = calcRobotCount(m, [0, Math.floor(m0 / 2) - 1], [
-    Math.floor(m1 / 2) + 1,
-    m1,
-  ]);
-  let third = calcRobotCount(m, [Math.floor(m0 / 2) + 1, m0], [
-    0,
-    Math.floor(m1 / 2) - 1,
-  ]);
-  let fourth = calcRobotCount(m, [Math.floor(m0 / 2) + 1, m0], [
-    Math.floor(m1 / 2) + 1,
-    m1,
-  ]);
+  return m;
+}
+function firstPartSolution(data: Data[]): number {
+  const max: Point = [101, 103];
+  const repeat = 100;
+  const m: Record<string, number> = getMap(data, max, repeat);
+  const xMiddle = Math.floor(max[0] / 2);
+  const yMiddle = Math.floor(max[1] / 2);
+  const [xMax, yMax] = max;
+  const first = calcRobotCount(m, [0, xMiddle - 1], [0, yMiddle - 1]);
+  const second = calcRobotCount(m, [0, xMiddle - 1], [yMiddle + 1, yMax]);
+  const third = calcRobotCount(m, [xMiddle + 1, xMax], [0, yMiddle - 1]);
+  const fourth = calcRobotCount(m, [xMiddle + 1, xMax], [yMiddle + 1, yMax]);
 
   return first * second * third * fourth;
 }
+const dirs: Point[] = [[-1, 0], [0, 1], [1, 0], [0, -1]];
 
-async function secondPartSolutionV2(data: Data[]): Promise<number> {
-  let a = [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10]];
-  let repeat = 5
-  for (let i = 0; i < repeat; i++) {
-    await Deno.writeTextFile("./day_14/demo.txt", JSON.stringify(i), {
-      append: true,
-    });
-    await Deno.writeTextFile("./day_14/demo.txt", "\r\n", { append: true });
-    await Deno.writeTextFile("./day_14/demo.txt", JSON.stringify(a), {
-      append: true,
-    });
-    await Deno.writeTextFile("./day_14/demo.txt", "\r\n", { append: true });
-
+function findGroupCount(data: Record<string, number>): number {
+  let groupCount = 0;
+  for(const key of Object.keys(data)){
+    const el = data[key]
+      if (el > 0) {
+      groupCount++;
+      const stack: string[] = [key];
+       data[key]=0;
+      while (stack.length > 0) {
+        const cRaw = stack.pop() as string;
+        const c = cRaw.split("_").map((e) => +e);
+        dirs.forEach(([deltaX, deltaY]) => {
+          const [newX, newY] = [c[0] + deltaX, c[1] + deltaY];
+          const newKey = `${newX}_${newY}`;
+          if (data[newKey]) {
+             data[newKey]=0;
+            stack.push(newKey);
+          }
+        });
+      }
+    }
   }
+  return groupCount;
+}
+function secondPartSolution(data: Data[]): number {
+  const max: Point = [101, 103];
+  let repeat = 1;
+  while (repeat < 2*max[0]*max[1]) {
+    const groupCount = findGroupCount(getMap(data, max, repeat));
 
-  return 0;
+    if (groupCount < data.length / 2) {
+      return repeat;
+    }
+    repeat++;
+  }
+  return -1;
 }
 
 const main = async () => {
   const rawData = await getRawLines("./day_14/data/input.txt");
-  let data = rawData.map(prepareData);
+  const data = rawData.map(prepareData);
   console.log("Part 1: ", firstPartSolution(data));
-  console.log("Part 2: ", secondPartSolutionV2(data));
+  console.log("Part 2: ", secondPartSolution(data));
 };
 
 main();

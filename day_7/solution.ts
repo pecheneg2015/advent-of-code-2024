@@ -63,7 +63,7 @@ function firstPartSolution(data: Item[]): number {
 function secondPartSolution(data: Item[]): number {
   let res = 0;
   data.forEach((item) => {
-    if (isValidEq(item, ["+", "*","|"])) {
+    if (isValidEq(item, ["+", "*", "|"])) {
       res += item.target;
     }
   });

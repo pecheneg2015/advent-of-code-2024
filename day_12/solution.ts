@@ -1,7 +1,7 @@
 import { getRawLines } from "#utils";
 
-type Point = [number, number]
-type Edge = [Point, Point]
+type Point = [number, number];
+type Edge = [Point, Point];
 const dirs: Point[] = [[-1, 0], [0, 1], [1, 0], [0, -1]];
 
 function getSecondEdgePoint(
@@ -82,8 +82,9 @@ function calcEdgesCount(data: Edge[]): number {
     const newEl = data[ind] as Edge;
     const dir = getDirection(el);
     const newdir = getDirection(newEl);
-    if (dir !== newdir)
+    if (dir !== newdir) {
       res++;
+    }
     const notVisitedInd = data.findIndex((_, i) => !visited.includes(i));
     el = !visited.includes(ind) ? newEl : data[notVisitedInd];
     visited.push(
