@@ -5,6 +5,7 @@
   "imports": {
     "@std/assert": "jsr:@std/assert@1",
     "@std/node/os": "https://deno.land/std@0.110.0/node/os.ts",
-    "#utils": "./utils/index.ts"
+    "#utils": "./utils/index.ts",
+    "@datastructures-js/priority-queue":"npm:@datastructures-js/priority-queue@6.3.1"
   }
 }

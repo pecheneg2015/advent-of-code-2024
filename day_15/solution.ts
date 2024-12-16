@@ -211,7 +211,9 @@ function updateFieldVT(
   if (isWrong) {
     return current;
   }
-  let visited: Point[] = Array.from(new Set(visitedArr)).map(e=>e.split('_').map(e=>+e) as Point);
+  let visited: Point[] = Array.from(new Set(visitedArr)).map((e) =>
+    e.split("_").map((e) => +e) as Point
+  );
 
   visited.sort((a, b) => a[0] - b[0]);
   visited.forEach((point) => {
@@ -253,7 +255,9 @@ function updateFieldVB(
   if (isWrong) {
     return current;
   }
-  let visited: Point[] = Array.from(new Set(visitedArr)).map(e=>e.split('_').map(e=>+e) as Point);
+  let visited: Point[] = Array.from(new Set(visitedArr)).map((e) =>
+    e.split("_").map((e) => +e) as Point
+  );
 
   visited.sort((a, b) => b[0] - a[0]);
   visited.forEach((point) => {

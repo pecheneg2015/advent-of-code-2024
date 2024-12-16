@@ -91,12 +91,12 @@ const dirs: Point[] = [[-1, 0], [0, 1], [1, 0], [0, -1]];
 
 function findGroupCount(data: Record<string, number>): number {
   let groupCount = 0;
-  for(const key of Object.keys(data)){
-    const el = data[key]
-      if (el > 0) {
+  for (const key of Object.keys(data)) {
+    const el = data[key];
+    if (el > 0) {
       groupCount++;
       const stack: string[] = [key];
-       data[key]=0;
+      data[key] = 0;
       while (stack.length > 0) {
         const cRaw = stack.pop() as string;
         const c = cRaw.split("_").map((e) => +e);
@@ -104,7 +104,7 @@ function findGroupCount(data: Record<string, number>): number {
           const [newX, newY] = [c[0] + deltaX, c[1] + deltaY];
           const newKey = `${newX}_${newY}`;
           if (data[newKey]) {
-             data[newKey]=0;
+            data[newKey] = 0;
             stack.push(newKey);
           }
         });
@@ -116,7 +116,7 @@ function findGroupCount(data: Record<string, number>): number {
 function secondPartSolution(data: Data[]): number {
   const max: Point = [101, 103];
   let repeat = 1;
-  while (repeat < 2*max[0]*max[1]) {
+  while (repeat < 2 * max[0] * max[1]) {
     const groupCount = findGroupCount(getMap(data, max, repeat));
 
     if (groupCount < data.length / 2) {

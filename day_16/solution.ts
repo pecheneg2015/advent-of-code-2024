@@ -21,7 +21,7 @@ const invD: Record<D, D> = {
   "E": "W",
   "N": "S",
   "W": "E",
-  "S":"N",
+  "S": "N",
 };
 
 const delta: Record<D, [number, number]> = {
@@ -66,33 +66,35 @@ function firstPartSolution(
 ): number {
   let res: number[] = [];
   let minRes = data.length * data[0].length * 100;
-  let stack: StackEl[] = [[start, "E", 0, `${start[0]}_${start[1]}_E`]];
+  console.log(  data.length *data[0].length * 100)
+  let stack: StackEl[] = [[start, "E", 0, `${start[0]}_${start[1]}_E`],[start, "N", 1000, `${start[0]}_${start[1]}_N`]];
   while (stack.length) {
-    let [point, dir, sum, visited] = stack.pop() as StackEl;
+    let [point, dir, sum, visited] = stack.shift() as StackEl;
     if (data[point[0]][point[1]] === "#") {
       continue;
     }
-    if (point[0] === end[0] && point[1] === end[1] ) {
+    if (point[0] === end[0] && point[1] === end[1]) {
       res.push(sum);
+      // console.log('ddd',sum)
       minRes = Math.min(sum, minRes);
     } else if (sum < minRes) {
       let del = delta[dir];
       let first = point[0] + del[0];
       let second = point[1] + del[1];
-      
       if (
-        visited.search(`${first}_${second}_${dAvailable}`) === -1  && data[first][second]!=="#"
+       data[first][second] !== "#"
       ) {
         stack.push([
           [first, second],
           dir,
-          sum+ 1,
+          sum + 1,
           `${visited},${first}_${second}_${dir}`,
         ]);
       }
       del = delta[dAvailable[dir][1]];
       if (
-        visited.search(`${point[0]}_${point[1]}_${dAvailable[dir][1]}`) === -1  && data[point[0]+del[0]][point[1]+del[1]]!=="#"
+        visited.search(`${point[0]}_${point[1]}_${dAvailable[dir][1]}`) ===
+          -1 && data[point[0] + del[0]][point[1] + del[1]] !== "#"
       ) {
         stack.push([
           point,
@@ -105,20 +107,19 @@ function firstPartSolution(
       // console.log(dAvailable[dir][0])
 
       if (
-        visited.search(`${point[0]}_${point[1]}_${dAvailable[dir][0]}`) === -1  && data[point[0]+del[0]][point[1]+del[1]]!=="#"
+        visited.search(`${point[0]}_${point[1]}_${dAvailable[dir][0]}`) ===
+          -1 && data[point[0] + del[0]][point[1] + del[1]] !== "#"
       ) {
-
         stack.push([
           point,
           dAvailable[dir][0],
-          sum + 1000-1,
+          sum + 1000 ,
           `${visited},${point[0]}_${point[1]}_${dAvailable[dir][0]}`,
         ]);
       }
-
     }
   }
-  console.log(Array.from(new Set(res)))
+  console.log(Array.from(new Set(res)));
   return minRes;
 }
 
@@ -132,7 +133,7 @@ function secondPartSolution(
 }
 
 const main = async () => {
-  const rawData = await getRawLines("./day_16/data/input.txt");
+  const rawData = await getRawLines("./day_16/data/example.txt");
   const field = getArr(rawData);
   const startPoint: Point = findPoint(field, "S");
   const endPoint: Point = findPoint(field, "E");
