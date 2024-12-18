@@ -3,6 +3,7 @@
   "specifiers": {
     "jsr:@std/assert@1": "1.0.8",
     "jsr:@std/internal@^1.0.5": "1.0.5",
+    "npm:@datastructures-js/heap@4.3.3": "4.3.3",
     "npm:@datastructures-js/priority-queue@6.3.1": "6.3.1"
   },
   "jsr": {
@@ -89,6 +90,7 @@
   "workspace": {
     "dependencies": [
       "jsr:@std/assert@1",
+      "npm:@datastructures-js/heap@4.3.3",
       "npm:@datastructures-js/priority-queue@6.3.1"
     ]
   }

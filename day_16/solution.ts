@@ -46,135 +46,109 @@ function findPoint(data: string[][], el: string): Point {
   throw new Error("Could not find start point");
 }
 
-function getCount(data: string[][]): number {
-  let res = 0;
-  for (let i = 0; i < data.length; i++) {
-    for (let j = 0; j < data[0].length; j++) {
-      if (data[i][j] !== "#") {
-        res++;
-      }
-    }
-  }
-  return res;
-}
+type StackEl = [Point, D, number];
 
-type StackEl = [Point, D, number, string];
 function firstPartSolution(
   data: string[][],
   start: Point,
   end: Point,
 ): number {
-  let res: number[] = [];
-  let minRes = data.length * data[0].length * 100/2;
-  console.log(  data.length *data[0].length * 100/2)
-  let stack: StackEl[] = [[start, "E", 0, `${start[0]}_${start[1]}_E`],[start, "N", 1000, `${start[0]}_${start[1]}_N`]];
+  let r: number[] = [];
+  let minRes = Number.MAX_SAFE_INTEGER;
+  const visited = new Set<string>();
+
+  const m: Record<string, boolean> = {};
+  const stack: StackEl[] = [[start, "E", 0]];
   while (stack.length) {
-    let [point, dir, sum, visited] = stack.pop() as StackEl;
-    if (data[point[0]][point[1]] === "#") {
+    stack.sort((a, b) => a[2] - b[2]);
+    const [point, dir, sum] = stack.shift() as StackEl;
+    if (point[0] === end[0] && point[1] === end[1]) {
+      minRes = Math.min(sum, minRes);
+      return sum; // r.push(sum)
       continue;
     }
-    if (point[0] === end[0] && point[1] === end[1]) {
-      res.push(sum);
-      console.log('ddd',sum)
-      minRes = Math.min(sum, minRes);
-    } else if (sum < minRes) {
-      let del = delta[dir];
-      let first = point[0] + del[0];
-      let second = point[1] + del[1];
-      if (
-       data[first][second] !== "#"
-      ) {
-        stack.push([
-          [first, second],
-          dir,
-          sum + 1,
-          `${visited},${first}_${second}_${dir}`,
-        ]);
-      }
-      del = delta[dAvailable[dir][1]];
-      if (
-        visited.search(`${point[0]}_${point[1]}_${dAvailable[dir][1]}`) ===
-          -1 && data[point[0] + del[0]][point[1] + del[1]] !== "#"
-      ) {
-        stack.push([
-          point,
-          dAvailable[dir][1],
-          sum + 1000,
-          `${visited},${point[0]}_${point[1]}_${dAvailable[dir][1]}`,
-        ]);
-      }
-      del = delta[dAvailable[dir][0]];
-      // console.log(dAvailable[dir][0])
-
-      if (
-        visited.search(`${point[0]}_${point[1]}_${dAvailable[dir][0]}`) ===
-          -1 && data[point[0] + del[0]][point[1] + del[1]] !== "#"
-      ) {
-        stack.push([
-          point,
-          dAvailable[dir][0],
-          sum + 1000 ,
-          `${visited},${point[0]}_${point[1]}_${dAvailable[dir][0]}`,
-        ]);
-      }
+    if (m[`${point[0]}_${point[1]}_${dir}`]) {
+      continue;
     }
+
+    const del = delta[dir];
+    const first = point[0] + del[0];
+    const second = point[1] + del[1];
+    m[`${point[0]}_${point[1]}_${dir}`] = true;
+
+    if (data[first][second] !== "#") {
+      stack.push([
+        [first, second],
+        dir,
+        sum + 1,
+      ]);
+    }
+
+    stack.push([
+      point,
+      dAvailable[dir][1],
+      sum + 1000,
+    ]);
+    stack.push([
+      point,
+      dAvailable[dir][0],
+      sum + 1000,
+    ]);
   }
-  console.log(Array.from(new Set(res)));
   return minRes;
 }
+
+type StackEl2 = [Point, D, number, Point[]];
 
 function secondPartSolution(
   data: string[][],
   start: Point,
   end: Point,
-  startDir: number,
+  target: number,
 ): number {
-  return 0;
-}
+  const queue: [[Point, number, number, Point[]]] = [
+    [start, 1, 0, [start]],
+  ];
+  const visited = new Map<string, number>();
+  const paths: Point[][] = [];
 
-function updateField(data:string[][]){
-  for(let m =0;m<data.length*data[0].length;m++){
-    for(let i=1;i<data.length-1;i++){
-      for(let j=1;j<data[0].length-1;j++){
-        if(data[i][j]==='.'){
-          let topLeft = data[i-1][j-1]==='#'?1:0
-          let top = data[i-1][j]==='#'?1:0
-          let topRight = data[i-1][j+1]==='#'?1:0
-          let left = data[i][j-1]==='#'?1:0
-          let right = data[i][j+1]==='#'?1:0
-          let bottomLeft = data[i+1][j-1]==='#'?1:0
-          let bottom = data[i+1][j]==='#'?1:0
-          let bottomRight = data[i+1][j+1]==='#'?1:0
-          let t = left+ topLeft+top+topRight+right
-          let l = left+ topLeft+bottomLeft+top+bottom
-          let r = right+ topRight+bottomRight+top+bottom
-          let b = left+ bottomLeft+bottom+bottomRight+right
+  while (queue.length) {
+    const [point, dir, score, path] = queue.shift()!;
+    const key = `${point[0]}_${point[1]}_${dir}`;
 
+    if (score > target) continue;
+    if (visited.has(key) && visited.get(key)! < score) continue;
+    visited.set(key, score);
 
-          if(t===5 || l===5 || r===5 ||b===5){
-            console.log("UPD")
-                        data[i][j]='#'
-          }
-
-  
-        }
-      }
+    if (point[0] === end[0] && point[1] === end[1] && score === target) {
+      paths.push(path);
+      continue;
     }
-    // data.map(e=>console.log(e.join('')))
 
+    const newPoint: Point = [point[0] + dirs[dir][0], point[1] + dirs[dir][1]];
+    if (data[newPoint[0]]?.[newPoint[1]] !== "#") {
+      queue.push([newPoint, dir, score + 1, [...path, newPoint]]);
+    }
+
+    queue.push([point, (dir + 1) % 4, score + 1000, [...path]]);
+    queue.push([point, (dir + 3) % 4, score + 1000, [...path]]);
   }
+  const res: string[] = paths.flat().map((e) => `${e[0]}_${e[1]}`);
 
+  return new Set(res).size;
 }
+
 const main = async () => {
-  const rawData = await getRawLines("./day_16/data/example.txt");
+  const rawData = await getRawLines("./day_16/data/input.txt");
   const field = getArr(rawData);
   const startPoint: Point = findPoint(field, "S");
   const endPoint: Point = findPoint(field, "E");
-  console.log(startPoint, endPoint);
-  updateField(field)
-  console.log('updateField',)
-  field.map(e=>console.log(e.join('')))
-  console.log("Part 1: ", firstPartSolution(field, startPoint, endPoint));
+  const firstPartResult = firstPartSolution(field, startPoint, endPoint);
+  console.log("Part 1: ", firstPartResult);
+  console.log(
+    "Part 2: ",
+    secondPartSolution(field, startPoint, endPoint, firstPartResult),
+  );
 };
 
 main();
