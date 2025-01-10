@@ -4,7 +4,10 @@
     "jsr:@std/assert@1": "1.0.8",
     "jsr:@std/internal@^1.0.5": "1.0.5",
     "npm:@datastructures-js/heap@4.3.3": "4.3.3",
-    "npm:@datastructures-js/priority-queue@6.3.1": "6.3.1"
+    "npm:@datastructures-js/priority-queue@6.3.1": "6.3.1",
+    "npm:@datastructures-js/trie@4.2.2": "4.2.2",
+    "npm:@types/lodash@4.17.13": "4.17.13",
+    "npm:lodash@4.17.21": "4.17.21"
   },
   "jsr": {
     "@std/assert@1.0.8": {
@@ -26,6 +29,15 @@
       "dependencies": [
         "@datastructures-js/heap"
       ]
+    },
+    "@datastructures-js/trie@4.2.2": {
+      "integrity": "sha512-wZFXic9OLc+BgtnUYr0EIaAZLaPaNt0r1zjf2xJ5JhGwuK0w2vwlOMMj9RHgIeOY+UM0J76CcrmN/wn2LlEYkA=="
+    },
+    "@types/lodash@4.17.13": {
+      "integrity": "sha512-lfx+dftrEZcdBPczf9d0Qv0x+j/rfNCMuC6OcfXmO8gkfeNAY88PgKUbvG56whcN23gc27yenwF6oJZXGFpYxg=="
+    },
+    "lodash@4.17.21": {
+      "integrity": "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg=="
     }
   },
   "remote": {
@@ -91,7 +103,8 @@
     "dependencies": [
       "jsr:@std/assert@1",
       "npm:@datastructures-js/heap@4.3.3",
-      "npm:@datastructures-js/priority-queue@6.3.1"
+      "npm:@datastructures-js/priority-queue@6.3.1",
+      "npm:@datastructures-js/trie@4.2.2"
     ]
   }
 }

@@ -7,6 +7,7 @@
     "@std/node/os": "https://deno.land/std@0.110.0/node/os.ts",
     "#utils": "./utils/index.ts",
     "@datastructures-js/priority-queue":"npm:@datastructures-js/priority-queue@6.3.1",
-    "@datastructures-js/heap":"npm:@datastructures-js/heap@4.3.3"
+    "@datastructures-js/heap":"npm:@datastructures-js/heap@4.3.3",
+    "@datastructures-js/trie":"npm:@datastructures-js/trie@4.2.2"
   }
 }
